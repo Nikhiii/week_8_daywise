@@ -4,6 +4,8 @@ const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const authRoutes = require('./routes/authRoutes');
 const userRoutes = require('./routes/userRoutes');
+const jwtUtil = require('./authUtil'); // Update the path accordingly
+
 
 const app = express();
 
@@ -27,10 +29,25 @@ app.use(session({
   saveUninitialized: true,
 }));
 
+// Middleware to verify JWT token
+app.use((req, res, next) => {
+  const token = req.headers.authorization;
+
+  if (token) {
+    const decoded = jwtUtil.verifyToken(token);
+
+    if (decoded) {
+      req.userId = decoded.userId;
+    }
+  }
+
+  next();
+});
+
 app.use('/auth', authRoutes);
 app.use('/users', userRoutes);
 
-const PORT = 3000;
+const PORT = 8080;
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });
