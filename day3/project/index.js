@@ -11,7 +11,6 @@ const mongoURI = 'mongodb://0.0.0.0:27017/formdataDB';
 // Middleware
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
-// app.set('view engine', 'ejs');
 
 // Database Connection
 mongoose.connect(mongoURI, { useNewUrlParser: true, useUnifiedTopology: true })
@@ -23,10 +22,6 @@ mongoose.connect(mongoURI, { useNewUrlParser: true, useUnifiedTopology: true })
   });
 
 // Routes
-app.get('/', (req, res) => {
-  res.render('form');
-});
-
 app.use('/formData', formRoutes);
 
 app.listen(port, () => {

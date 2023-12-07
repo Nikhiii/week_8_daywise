@@ -1,9 +1,8 @@
-
 const FootballPlayer = require('../models/formdataModel');
 
 const formController = {};
 
-formController.submitForm = async (req, res) => {
+formController.createForm = async (req, res) => {
     try {
         const { name, age, nationality, club, position, goals_scored } = req.body;
         const playerData = new FootballPlayer({
