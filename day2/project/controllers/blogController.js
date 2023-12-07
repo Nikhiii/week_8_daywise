@@ -46,11 +46,15 @@ const updateBlog = (req, res) => {
 };
 
 const deleteBlog = (req, res) => {
-  const id = req.params.id;
-  let data = readDataFromFile();
-  data = data.filter((blog) => blog.id !== id);
-  writeDataToFile(data);
-  res.redirect('/blog');
+  const data = readDataFromFile();
+  const blogId = req.params.id;
+  const filteredData = data.filter((blog) => blog.id !== blogId);
+  if (filteredData.length < data.length) {
+    writeDataToFile(filteredData);
+    res.json({ message: 'Blog deleted successfully' });
+  } else {
+    res.status(404).json({ message: 'Blog not found' });
+  }
 };
 
 module.exports = { getBlogs, getBlogById, createBlog, updateBlog, deleteBlog };
