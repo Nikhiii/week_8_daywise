@@ -14,8 +14,7 @@ const writeDataToFile = (data) => {
 
 const getBlogs = (req, res) => {
   const data = readDataFromFile();
-  // res.render('blogs', { blogs: data });
-  res.json(data)
+  res.render('blogs', { blogs: data });
 };
 
 const getBlogById = (req, res) => {
@@ -27,25 +26,22 @@ const getBlogById = (req, res) => {
 
 const createBlog = (req, res) => {
   const data = readDataFromFile();
-  const { id, title, content } = req.body;
-  const newBlog = { id, title, content };
+  const newBlog = req.body;
   data.push(newBlog);
   writeDataToFile(data);
-  res.redirect('/blog');
+  res.json(newBlog);
 };
 
 const updateBlog = (req, res) => {
-  const id = req.params.id;
-  const { title, content } = req.body;
-  let data = readDataFromFile();
-  const index = data.findIndex((blog) => blog.id === id);
-  if (index !== -1) {
-    data[index].title = title;
-    data[index].content = content;
+  const data = readDataFromFile();
+  const blogId = req.params.id;
+  const blogIndex = data.findIndex((task) => task.id === blogId);
+  if (blogIndex !== -1) {
+    data[blogIndex] = { ...data[blogIndex], ...req.body };
     writeDataToFile(data);
-    res.redirect('/blog');
+    res.json(data[blogIndex]);
   } else {
-    res.status(404).send('Blog not found');
+    res.status(404).json({ message: 'Task not found' });
   }
 };
 
