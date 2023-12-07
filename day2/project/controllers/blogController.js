@@ -14,7 +14,7 @@ const writeDataToFile = (data) => {
 
 const getBlogs = (req, res) => {
   const data = readDataFromFile();
-  res.render('blogs', { blogs: data });
+  res.json(data);
 };
 
 const getBlogById = (req, res) => {
