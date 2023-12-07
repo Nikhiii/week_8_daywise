@@ -9,6 +9,7 @@ const port = 8080;
 const mongoURI = 'mongodb://0.0.0.0:27017/formdataDB';
 
 // Middleware
+app.use(bodyParser.json()); // Parse JSON requests
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 
