@@ -17,7 +17,7 @@ formController.createForm = async (req, res) => {
         res.json(savedData);
     } catch (error) {
         console.error('Error submitting form data:', error);
-        res.status(500).json({ error: 'Internal Server Error' });
+        res.status(500).json({ error: 'Internal Server Error',message: error.message });
     }
 };
 
