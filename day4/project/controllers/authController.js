@@ -15,21 +15,29 @@ const authController = {
   },
 
   login: async (req, res) => {
-    try {
-      const { username, password } = req.body;
-      const user = await User.findOne({ username });
-      if (!user) {
-        return res.status(404).json({ error: 'User not found' });
-      }
-      const validPassword = await bcrypt.compare(password, user.password);
-      if (!validPassword) {
-        return res.status(401).json({ error: 'Invalid password' });
-      }
-      res.status(201).json({ message: 'User logged in successfully' });
-    } catch (error) {
-      res.status(500).json({ error: 'Internal Server Error' });
+    const { username, password } = req.body;
+
+  try {
+    // Find the user by username
+    const user = await User.findOne({ username });
+
+    // If the user doesn't exist or the password is incorrect, return an error
+    if (!user || !(await bcrypt.compare(password, user.password))) {
+      return res.status(401).json({ message: 'Invalid credentials' });
     }
+
+    // Generate a JWT token
+    const token = jwt.sign({ userId: user._id }, 'nodesecret', {
+      expiresIn: '1h', // You can adjust the expiration time as needed
+    });
+
+    // Send the token as a response
+    res.status(200).json({ token });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Internal server error' });
   }
+}
 };
 
 module.exports = authController;
